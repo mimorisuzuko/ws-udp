@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
+	<script src='/socket.io/socket.io.js'></script>
+	<style>
+		html,
+		body,
+		main {
+			width: 100%;
+			height: 100%;
+		}
+		
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<main></main>
+	<script>
+		const socket = io.connect();
+		const $main = document.querySelector('main');
+		const ua = navigator.userAgent.toLowerCase();
+		const is = ['iphone', 'ipad', 'android', 'mobile', 'android'].some((a) => ua.indexOf(a) > -1);
+
+		if (is) {
+			$main.addEventListener('touchend', (e) => {
+				const {clientX, clientY} = e.changedTouches.item(0);
+
+				socket.emit('pos', `${clientX},${clientY}`);
+			});
+		} else {
+			$main.addEventListener('mouseup', (e) => {
+				const {clientX, clientY} = e;
+
+				socket.emit('pos', `${clientX},${clientY}`);
+			});
+		}
+	</script>
+</body>
+
+</html>
