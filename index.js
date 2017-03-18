@@ -1,8 +1,13 @@
 const fs = require('fs');
 const libpath = require('path');
 const app = require('http').createServer((req, res) => {
-	fs.readFile(libpath.join(__dirname, '/index.html'), (err, data) => {
-		if (err) { return res.send(500); }
+	const { url } = req;
+
+	fs.readFile(libpath.join(__dirname, url), (err, data) => {
+		if (err) {
+			res.writeHead(500);
+			return res.end();
+		}
 
 		res.writeHead(200);
 		res.end(data);
